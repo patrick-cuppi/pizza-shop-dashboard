@@ -3,12 +3,6 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
-  "devDependencies": {
-    "@faker-js/faker": "^10.1.0",
-    "@types/bun": "latest",
-    "chalk": "^5.6.2",
-    "drizzle-kit": "^0.31.5"
-  },
   "scripts": {
     "dev": "bun --watch src/http/server.ts",
     "build": "bun build src/http/server.ts --target bun --outdir ./dist",
@@ -17,10 +11,8 @@
     "generate:dev": "drizzle-kit generate",
     "migrate:dev": "drizzle-kit migrate",
     "studio:dev": "drizzle-kit studio",
-    "seed:dev": "bun src/db/seed.ts"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "seed:dev": "bun src/db/seed.ts",
+    "lint": "eslint --fix src --ext .ts"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^3.1.0",
@@ -28,5 +20,15 @@
     "elysia": "^1.4.12",
     "postgres": "^3.4.7",
     "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@rocketseat/eslint-config": "^2.2.2",
+    "@types/bun": "latest",
+    "chalk": "^5.6.2",
+    "drizzle-kit": "^0.31.5",
+    "eslint": "^9.38.0",
+    "eslint-plugin-drizzle": "^0.2.3",
+    "typescript": "^5.9.3"
   }
 }
