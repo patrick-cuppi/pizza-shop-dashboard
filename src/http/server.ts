@@ -3,12 +3,14 @@ import { authenticateFromLinkRoute } from "./routes/authenticate-from-link-route
 import { registerRestaurantRoute } from "./routes/register-restaurant-route";
 import { sendAuthLinkRoute } from "./routes/send-auth-link-route";
 import { signOutRoute } from "./routes/sign-out-route";
+import { getProfileRoute } from "./routes/get-profile-route";
 
 export const app = new Elysia()
   .use(registerRestaurantRoute)
   .use(sendAuthLinkRoute)
   .use(authenticateFromLinkRoute)
-  .use(signOutRoute);
+  .use(signOutRoute)
+  .use(getProfileRoute);
 
 app.get("/health", () => "OK");
 

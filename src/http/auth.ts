@@ -31,5 +31,17 @@ export const auth = new Elysia()
         if (!auth) throw new Error("Missing auth cookie");
         auth.remove();
       },
+
+      getCurrentUser: async () => {
+        const authCookie = auth?.value as string;
+
+        const payload = await jwt.verify(authCookie);
+        if (!payload) throw new Error("Invalid auth token");
+
+        return {
+          userId: payload.sub,
+          restaurantId: payload.restaurantId,
+        };
+      },
     };
   });
