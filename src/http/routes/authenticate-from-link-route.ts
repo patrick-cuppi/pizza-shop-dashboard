@@ -7,7 +7,7 @@ import { auth } from "../auth";
 
 export const authenticateFromLinkRoute = new Elysia().use(auth).get(
   "/auth-links/authenticate",
-  async ({ query, jwt, cookie: { auth }, redirect }) => {
+  async ({ query, signUser, redirect }) => {
     const { code, redirect: redirectUrl } = query;
 
     const authLinkFromCode = await db.query.authLinks.findFirst({
@@ -33,17 +33,10 @@ export const authenticateFromLinkRoute = new Elysia().use(auth).get(
       },
     });
 
-    const token = await jwt.sign({
+    await signUser({
       sub: authLinkFromCode.userId,
       restaurantId: managedRestaurant?.id,
     });
-
-    if (!auth) throw new Error("Missing auth cookie");
-
-    auth.value = token;
-    auth.httpOnly = true;
-    auth.maxAge = 60 * 60 * 24 * 7; // 7 days
-    auth.path = "/";
 
     await db.delete(authLinks).where(eq(authLinks.code, code));
 
