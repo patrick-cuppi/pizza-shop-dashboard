@@ -1,23 +1,12 @@
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
+import { authenticateFromLinkRoute } from "./routes/authenticate-from-link-route";
 import { registerRestaurantRoute } from "./routes/register-restaurant-route";
 import { sendAuthLinkRoute } from "./routes/send-auth-link-route";
-import jwt from "@elysiajs/jwt";
-import { env } from "../env";
-import cookie from "@elysiajs/cookie";
 
-const app = new Elysia()
-  .use(
-    jwt({
-      secret: env.JWT_SECRET,
-      schema: t.Object({
-        sub: t.String(),
-        restaurantId: t.Optional(t.String()),
-      }),
-    })
-  )
-  .use(cookie())
+export const app = new Elysia()
   .use(registerRestaurantRoute)
-  .use(sendAuthLinkRoute);
+  .use(sendAuthLinkRoute)
+  .use(authenticateFromLinkRoute);
 
 app.get("/health", () => "OK");
 
