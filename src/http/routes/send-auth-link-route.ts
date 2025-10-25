@@ -4,6 +4,7 @@ import { authLinks, users } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { env } from "../../env";
+import { mail } from "../../lib/mail";
 
 export const sendAuthLinkRoute = new Elysia().post(
   "/authenticate",
@@ -26,9 +27,18 @@ export const sendAuthLinkRoute = new Elysia().post(
     authLink.searchParams.set("code", authLinkCode);
     authLink.searchParams.set("redirect", env.AUTH_REDIRECT_URL);
 
-    console.log(`Authentication link: ${authLink.toString()}`);
+    const info = await mail.sendMail({
+      from: {
+        name: "Pizza Shop",
+        address: "hi@pizzashop.com",
+      },
+      to: email,
+      subject: "Your authentication link",
+      text: `Click the link to authenticate: ${authLink.toString()}`,
+      html: `<p>Click the link to authenticate: <a target="_blank" rel="noopener noreferrer" 
+        href="${authLink.toString()}">${authLink.toString()}</a></p>`,
+    });
 
-    // Send email logic would go here
   },
   {
     body: t.Object({
