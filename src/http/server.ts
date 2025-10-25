@@ -4,13 +4,15 @@ import { registerRestaurantRoute } from "./routes/register-restaurant-route";
 import { sendAuthLinkRoute } from "./routes/send-auth-link-route";
 import { signOutRoute } from "./routes/sign-out-route";
 import { getProfileRoute } from "./routes/get-profile-route";
+import { getManagedRestaurantRoute } from "./routes/get-managed-restaurant-route";
 
 export const app = new Elysia()
   .use(registerRestaurantRoute)
   .use(sendAuthLinkRoute)
   .use(authenticateFromLinkRoute)
   .use(signOutRoute)
-  .use(getProfileRoute);
+  .use(getProfileRoute)
+  .use(getManagedRestaurantRoute);
 
 app.get("/health", () => "OK");
 
