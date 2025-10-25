@@ -1,42 +1,20 @@
-import { Elysia, t } from "elysia";
-import { db } from "../db/connection";
-import { restaurants, users } from "../db/schema";
+import { Elysia } from "elysia";
+import { authenticateFromLinkRoute } from "./routes/authenticate-from-link-route";
+import { registerRestaurantRoute } from "./routes/register-restaurant-route";
+import { sendAuthLinkRoute } from "./routes/send-auth-link-route";
+import { signOutRoute } from "./routes/sign-out-route";
+import { getProfileRoute } from "./routes/get-profile-route";
+import { getManagedRestaurantRoute } from "./routes/get-managed-restaurant-route";
 
-const app = new Elysia().get("/", () => "Hello, Elysia!");
+export const app = new Elysia()
+  .use(registerRestaurantRoute)
+  .use(sendAuthLinkRoute)
+  .use(authenticateFromLinkRoute)
+  .use(signOutRoute)
+  .use(getProfileRoute)
+  .use(getManagedRestaurantRoute);
 
-app.post(
-  "/restaurants",
-  async ({ body, set }) => {
-    const { restaurantName, managerName, email, phone } = body;
-
-    const [manager] = await db
-      .insert(users)
-      .values({
-        name: managerName,
-        email,
-        phone,
-        role: "manager",
-      })
-      .returning({
-        id: users.id,
-      });
-
-    await db.insert(restaurants).values({
-      name: restaurantName,
-      managerId: manager?.id,
-    });
-
-    set.status = 204;
-  },
-  {
-    body: t.Object({
-      restaurantName: t.String(),
-      managerName: t.String(),
-      email: t.String({ format: "email" }),
-      phone: t.String(),
-    }),
-  }
-);
+app.get("/health", () => "OK");
 
 app.listen(3333, () => {
   console.log("Server is running on http://localhost:3333");
