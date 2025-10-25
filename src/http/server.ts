@@ -12,7 +12,19 @@ export const app = new Elysia()
   .use(authenticateFromLinkRoute)
   .use(signOutRoute)
   .use(getProfileRoute)
-  .use(getManagedRestaurantRoute);
+  .use(getManagedRestaurantRoute)
+  .onError(({ code, error, set }) => {
+    switch (code) {
+      case "VALIDATION": {
+        set.status = error.status;
+        return error.toResponse();
+      }
+      default: {
+        set.status = 500;
+        return new Response(null, { status: 500 });
+      }
+    }
+  });
 
 app.get("/health", () => "OK");
 
